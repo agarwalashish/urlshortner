@@ -8,7 +8,10 @@ namespace Phishtank.Common.Entities
     public class Phish
     {
         [JsonProperty("phish_id")]
-        public string id { get; set; }
+        public string PhishId { get; set; }
+
+        [JsonProperty("id")]
+        public string Id { get; set; }
 
         [JsonProperty("url")]
         public string Url { get; set; }

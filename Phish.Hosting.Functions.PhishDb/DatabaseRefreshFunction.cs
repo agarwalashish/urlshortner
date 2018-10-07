@@ -13,27 +13,22 @@ namespace Phish.Hosting.Functions.PhishDb
 {
     public static class DatabaseRefreshFunction
     {
+        private const string DatabaseName = "phishtank";
+        private const string CollectionName = "submissions";
+
         /// <summary>
         /// The az function will run once at the top of every hour to fetch the latest phish urls
         /// </summary>
         [FunctionName("fetch_submissions")]
-        public static async Task Run(
-                               [TimerTrigger("0 0 * * * *", RunOnStartup = true)]TimerInfo myTimer, 
-                               ILogger log)
+        public static async Task Run([TimerTrigger("0 0 * * * *", RunOnStartup = true)]TimerInfo myTimer, 
+                                      ILogger log)
         {
             var phishTankDataUrl = Environment.GetEnvironmentVariable("PhishTankDataUrl");
             var phishTankApiKey = Environment.GetEnvironmentVariable("PhishTankApiKey");
+            var docDbUrl = new Uri(Environment.GetEnvironmentVariable("CosmosDbUrl"));
+            var docDbAuthKey = Environment.GetEnvironmentVariable("CosmosDbAuthKey");
 
             phishTankDataUrl = string.Format(phishTankDataUrl, phishTankApiKey);
-
-            var docDbUrl = new Uri("https://localhost:8081");
-            var docDbAuthKey = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==";
-
-
-            var authKey = new SecureString
-            {
-
-            };
 
             using (var cosmosClient = new DocumentClient(docDbUrl, docDbAuthKey))
             {
@@ -48,7 +43,9 @@ namespace Phish.Hosting.Functions.PhishDb
 
                         foreach (var phish in phishes)
                         {
-                            var collectionUri = UriFactory.CreateDocumentCollectionUri("phishtank", "submissions");
+                            // TODO: Proper way to come up with a way to index docs in cosmosdb 
+                            phish.Id = phish.PhishId;
+                            var collectionUri = UriFactory.CreateDocumentCollectionUri(DatabaseName, CollectionName);
                             await cosmosClient.UpsertDocumentAsync(collectionUri, phish);
                         }
                     }
@@ -61,4 +58,3 @@ namespace Phish.Hosting.Functions.PhishDb
         }
     }
 }
-//[CosmosDB("phishtank", "submissions", ConnectionStringSetting = "AccountEndpoint=https://localhost:8081/;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==")] DocumentClient client, 
