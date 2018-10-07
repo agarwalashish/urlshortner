@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace URLShortner
+namespace Phish.Hosting.URLShortner
 {
     public class Startup
     {
