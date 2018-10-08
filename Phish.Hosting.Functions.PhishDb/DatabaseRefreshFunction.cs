@@ -43,8 +43,12 @@ namespace Phish.Hosting.Functions.PhishDb
 
                         foreach (var phish in phishes)
                         {
-                            // TODO: Proper way to come up with a way to index docs in cosmosdb 
-                            phish.Id = phish.PhishId;
+                            if (string.IsNullOrWhiteSpace(phish.Url))
+                                continue;
+
+                            var uri = new Uri(phish.Url);
+                            phish.Id = uri.Host;
+
                             var collectionUri = UriFactory.CreateDocumentCollectionUri(DatabaseName, CollectionName);
                             await cosmosClient.UpsertDocumentAsync(collectionUri, phish);
                         }
