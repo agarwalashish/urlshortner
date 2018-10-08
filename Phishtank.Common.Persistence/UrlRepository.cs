@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Phishtank.Common.Entities;
+using Phishtank.Common.Entities.Internal;
 using Phishtank.Common.Persistence.Abstractions;
 using System;
 using System.Threading.Tasks;

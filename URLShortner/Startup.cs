@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,7 @@ using Phishtank.Common.Persistence;
 using Phishtank.Common.Persistence.Abstractions;
 using Phishtank.Common.Services;
 using Phishtank.Common.Services.Abstractions;
+using URLShortner.Middleware;
 
 namespace Phish.Hosting.URLShortner
 {
@@ -28,6 +30,14 @@ namespace Phish.Hosting.URLShortner
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            // Add versionings
+            services.AddApiVersioning(o =>
+            {
+                o.AssumeDefaultVersionWhenUnspecified = true;
+                o.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(new DateTime(2018, 10, 01));
+                o.ApiVersionReader = new HeaderApiVersionReader("x-csco-api");
+            });
 
             services.AddSingleton(Configuration);
             services.AddSingleton<IUrlService, UrlService>();
@@ -50,6 +60,7 @@ namespace Phish.Hosting.URLShortner
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseMiddleware<ExceptionMiddleware>();
             app.UseMvc();
         }
     }

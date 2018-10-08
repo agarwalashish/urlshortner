@@ -1,4 +1,4 @@
-﻿using Phishtank.Common.Entities;
+﻿using Phishtank.Common.Entities.Internal;
 using Phishtank.Common.Persistence.Abstractions;
 using Phishtank.Common.Services.Abstractions;
 using Phishtank.Common.Utilities;

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Phishtank.Common.Entities
+namespace Phishtank.Common.Entities.Internal
 {
     public class PhishDetails
     {

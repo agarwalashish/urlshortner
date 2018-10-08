@@ -1,4 +1,4 @@
-﻿using Phishtank.Common.Entities;
+﻿using Phishtank.Common.Entities.Internal;
 using System;
 using System.Collections.Generic;
 using System.Text;

@@ -39,7 +39,7 @@ namespace Phish.Hosting.Functions.PhishDb
 
                     if (fetchResponse.IsSuccessStatusCode)
                     {
-                        var phishes = JsonConvert.DeserializeObject<List<Phishtank.Common.Entities.Phish>>(fetchStr);
+                        var phishes = JsonConvert.DeserializeObject<List<Phishtank.Common.Entities.Internal.Phish>>(fetchStr);
 
                         foreach (var phish in phishes)
                         {
