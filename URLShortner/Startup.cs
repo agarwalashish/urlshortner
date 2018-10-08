@@ -8,6 +8,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Phishtank.Common.Persistence;
+using Phishtank.Common.Persistence.Abstractions;
+using Phishtank.Common.Services;
+using Phishtank.Common.Services.Abstractions;
 
 namespace Phish.Hosting.URLShortner
 {
@@ -24,6 +28,14 @@ namespace Phish.Hosting.URLShortner
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            services.AddSingleton(Configuration);
+            services.AddSingleton<IUrlService, UrlService>();
+
+            IUrlRepository urlRepository = new UrlRepository(Configuration);
+            urlRepository.InitializeAsync().GetAwaiter().GetResult();
+
+            services.AddSingleton(urlRepository);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
