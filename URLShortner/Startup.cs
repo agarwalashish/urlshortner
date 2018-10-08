@@ -35,6 +35,10 @@ namespace Phish.Hosting.URLShortner
             IUrlRepository urlRepository = new UrlRepository(Configuration);
             urlRepository.InitializeAsync().GetAwaiter().GetResult();
 
+            IPhishSubmissionsRepository phishRepository = new PhishSubmissionsRepository(Configuration);
+            phishRepository.InitializeAsync().GetAwaiter().GetResult();
+
+            services.AddSingleton(phishRepository);
             services.AddSingleton(urlRepository);
         }
 
