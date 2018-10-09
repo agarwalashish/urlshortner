@@ -21,7 +21,11 @@ namespace Phishtank.Common.Services
 
         public async Task<string> ShortenUrlAsync(ShortenUrlRequest request)
         {
-            var uri = new Uri(request.LongUrl);
+            if (request == null)
+                throw new InvalidShortenUrlRequestException("ShortenUrlRequest is null");
+            
+            if (string.IsNullOrEmpty(request.LongUrl) || !Uri.TryCreate(request.LongUrl, UriKind.Absolute, out Uri uri))
+                throw new InvalidShortenUrlRequestException("The URL is either missing or not a valid URI");
 
             // Check if the url is a known phishing site
             var isPhish = await _phishSubmissionsRepository.IsPhishAsync(uri.Host);
