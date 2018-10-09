@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Phishtank.Common.Entities.External;
+using Phishtank.Common.Entities.Internal;
 using Phishtank.Common.Exceptions;
 using Phishtank.Common.Services.Abstractions;
 using System;
@@ -13,7 +14,7 @@ namespace URLShortner.Controllers
     [ApiVersion("2018-10-01")]
     [Produces("application/json")]
     [Route("")]
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly IUrlService _urlService;
 
@@ -36,7 +37,7 @@ namespace URLShortner.Controllers
         }
 
         [HttpPost("shorten")]
-        public async Task<IActionResult> ShortenURLAsync([FromBody] ShortenUrlRequest request)
+        public async Task<IActionResult> ShortenURLAsync([FromBody] ApiShortenUrlRequest request)
         {
             if (request == null)
             {
@@ -48,7 +49,14 @@ namespace URLShortner.Controllers
                 throw new InvalidShortenUrlRequestException("The URL is either missing or not a valid URI");
             }
 
-            var shortUrl = await _urlService.ShortenUrlAsync(request.LongUrl.ToString());
+            var shortenUrlRequest = new ShortenUrlRequest
+            {
+                LongUrl = request.LongUrl,
+                IpAddress = IpAddress,
+                Timestamp = DateTimeOffset.UtcNow
+            };
+
+            var shortUrl = await _urlService.ShortenUrlAsync(shortenUrlRequest);
             return Ok(shortUrl);
         }
 

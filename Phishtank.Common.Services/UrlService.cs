@@ -1,10 +1,9 @@
 ﻿using Phishtank.Common.Entities.Internal;
+using Phishtank.Common.Exceptions;
 using Phishtank.Common.Persistence.Abstractions;
 using Phishtank.Common.Services.Abstractions;
 using Phishtank.Common.Utilities;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Phishtank.Common.Services
@@ -20,27 +19,26 @@ namespace Phishtank.Common.Services
             _phishSubmissionsRepository = phishSubmissionsRepository ?? throw new ArgumentNullException(nameof(phishSubmissionsRepository));
         }
 
-        public async Task<string> ShortenUrlAsync(string longUrl)
+        public async Task<string> ShortenUrlAsync(ShortenUrlRequest request)
         {
+            var uri = new Uri(request.LongUrl);
+
             // Check if the url is a known phishing site
-            var uri = new Uri(longUrl);
             var isPhish = await _phishSubmissionsRepository.IsPhishAsync(uri.Host);
 
             if (isPhish)
             {
-                // deal with this here
+                //TODO: Flag ip address
+                throw new InvalidShortenUrlRequestException($"The URL {request.LongUrl} is flagged for phishing");
             }
 
-            var rand = new Random();
-            var num = rand.Next();
-
-            var encodedUrl = UrlUtils.Encode(num);
+            var encodedUrl = request.LongUrl;
 
             var shortUrl = new ShortUrl
             {
                 Id = Guid.NewGuid(),
                 ShortenUrl = encodedUrl,
-                LongUrl = longUrl,
+                LongUrl = request.LongUrl,
                 CreatedOn = DateTimeOffset.UtcNow
             };
 

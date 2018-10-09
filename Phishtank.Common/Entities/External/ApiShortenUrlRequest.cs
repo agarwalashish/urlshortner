@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Phishtank.Common.Entities.External
 {
-    public class ShortenUrlRequest
+    public class ApiShortenUrlRequest
     {
         public string LongUrl { get; set; }
     }
