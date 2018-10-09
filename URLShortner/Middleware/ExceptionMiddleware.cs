@@ -45,7 +45,7 @@ namespace URLShortner.Middleware
                 };
 
                 // First log the exception 
-                _logger.LogError("API error", ex.Message, ex.Code);
+                _logger.LogError("API error {ex}", new object[] { ex });
 
                 var result = JsonConvert.SerializeObject(ex);
                 context.Response.ContentType = "application/json";
