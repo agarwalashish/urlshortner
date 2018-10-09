@@ -2,12 +2,14 @@
 using Phishtank.Common.Exceptions;
 using Phishtank.Common.Persistence.Abstractions;
 using Phishtank.Common.Services.Abstractions;
-using Phishtank.Common.Utilities;
 using System;
 using System.Threading.Tasks;
 
 namespace Phishtank.Common.Services
 {
+    /// <summary>
+    /// URL service to shorten urls. The service also implements checks to ensure that a given url is not a phishing url
+    /// </summary>
     public class UrlService : IUrlService
     {
         private readonly IUrlRepository _urlRepository;
@@ -19,6 +21,9 @@ namespace Phishtank.Common.Services
             _phishSubmissionsRepository = phishSubmissionsRepository ?? throw new ArgumentNullException(nameof(phishSubmissionsRepository));
         }
 
+        /// <summary>
+        /// Shortens a url
+        /// </summary>
         public async Task<string> ShortenUrlAsync(ShortenUrlRequest request)
         {
             if (request == null)
@@ -36,6 +41,7 @@ namespace Phishtank.Common.Services
                 throw new InvalidShortenUrlRequestException($"The URL {request.LongUrl} is flagged for phishing");
             }
 
+            // TODO: add logic for shortening the submitted URL
             var encodedUrl = request.LongUrl;
 
             var shortUrl = new ShortUrl

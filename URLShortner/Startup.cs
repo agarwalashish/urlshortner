@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Versioning;
@@ -10,7 +7,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Phishtank.Common.Persistence;
 using Phishtank.Common.Persistence.Abstractions;
 using Phishtank.Common.Services;
@@ -41,13 +37,16 @@ namespace Phish.Hosting.URLShortner
                 o.ApiVersionReader = new HeaderApiVersionReader("x-csco-api");
             });
 
+            var loggerFactory = new LoggerFactory().AddConsole();
+            
             services.AddSingleton(Configuration);
+            services.AddSingleton(loggerFactory);
             services.AddSingleton<IUrlService, UrlService>();
 
-            IUrlRepository urlRepository = new UrlRepository(Configuration);
+            IUrlRepository urlRepository = new UrlRepository(Configuration, loggerFactory);
             urlRepository.InitializeAsync().GetAwaiter().GetResult();
 
-            IPhishSubmissionsRepository phishRepository = new PhishSubmissionsRepository(Configuration);
+            IPhishSubmissionsRepository phishRepository = new PhishSubmissionsRepository(Configuration, loggerFactory);
             phishRepository.InitializeAsync().GetAwaiter().GetResult();
 
             services.AddSingleton(phishRepository);

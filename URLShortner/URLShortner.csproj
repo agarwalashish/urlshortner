@@ -25,10 +25,4 @@
     <ProjectReference Include="..\Phishtank.Common\Phishtank.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="loaderio-2a43a876fc42e5c415d51de0b486ea6d.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

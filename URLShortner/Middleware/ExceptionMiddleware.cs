@@ -19,12 +19,17 @@ namespace URLShortner.Middleware
         /// <summary>
         /// Handles custom API Exceptions
         /// </summary>
-        public ExceptionMiddleware(RequestDelegate next)
+        public ExceptionMiddleware(RequestDelegate next, ILoggerFactory loggerFactory)
         {
             _next = next;
-            //_logger = logger;
+            _logger = loggerFactory != null ? 
+                      loggerFactory.CreateLogger(typeof(ExceptionMiddleware).GetType().Name) : 
+                      throw new ArgumentNullException(nameof(loggerFactory));
         }
 
+        /// <summary>
+        /// Invokes logic of middleware
+        /// </summary>
         public async Task Invoke(HttpContext context)
         {
             try
@@ -40,7 +45,7 @@ namespace URLShortner.Middleware
                 };
 
                 // First log the exception 
-                //_logger.Error("API error", apiEx);
+                _logger.LogError("API error", ex.Message, ex.Code);
 
                 var result = JsonConvert.SerializeObject(ex);
                 context.Response.ContentType = "application/json";
@@ -49,7 +54,8 @@ namespace URLShortner.Middleware
             }
             catch (Exception ex)
             {
-                //_logger.Error<Exception>("Unknown API error", ex);
+                // Log exception
+                _logger.LogError("Unknown API error", ex);
 
                 var result = JsonConvert.SerializeObject(ex);
                 context.Response.ContentType = "application/json";

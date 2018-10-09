@@ -3,7 +3,6 @@ using Phishtank.Common.Persistence.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Phishtank.Tests.Mocks

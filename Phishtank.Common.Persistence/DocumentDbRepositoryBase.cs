@@ -108,6 +108,9 @@ namespace Phishtank.Common.Persistence
             await _client.UpsertDocumentAsync(collectionUri, document);
         }
 
+        /// <summary>
+        /// Performs the setup operations for the database if it does not already exist
+        /// </summary>
         public async Task InitializeAsync()
         {
             _client = new DocumentClient(new Uri(_dbUri), _authKey);

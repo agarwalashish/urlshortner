@@ -21,6 +21,10 @@ namespace URLShortner.Controllers
             _urlService = urlService ?? throw new ArgumentNullException(nameof(urlService));
         }
 
+        /// <summary>
+        /// Home page of the application
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Get()
         {
@@ -34,6 +38,11 @@ namespace URLShortner.Controllers
             return Ok(welcome);
         }
 
+        /// <summary>
+        /// Request to shorten the url
+        /// </summary>
+        /// <param name="request">Shorten Url request</param>
+        /// <returns>Returns the shortened url</returns>
         [HttpPost("shorten")]
         public async Task<IActionResult> ShortenURLAsync([FromBody] ApiShortenUrlRequest request)
         {

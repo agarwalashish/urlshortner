@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 namespace Phish.Hosting.Functions.PhishDb
 {
-    public static class DatabaseRefreshFunction
+    public static class PhishSubmissionsRefreshFunction
     {
         private const string DatabaseName = "phishtank";
         private const string CollectionName = "submissions";
