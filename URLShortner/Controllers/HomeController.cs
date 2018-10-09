@@ -39,6 +39,8 @@ namespace URLShortner.Controllers
         [HttpPost("shorten")]
         public async Task<IActionResult> ShortenURLAsync([FromBody] ApiShortenUrlRequest request)
         {
+            var ur = new Uri(request.LongUrl);
+
             if (request == null)
             {
                 throw new InvalidShortenUrlRequestException("Please provide a valid url request");
