@@ -3,6 +3,9 @@ This is the code for a url shortening service (similar to bit.ly). The service a
 
 **NOTE:** At the moment, the service only checks to see if the url is a known phish or not.
 
+## Technical Design
+![Is Phish Technical Design](https://github.com/agarwalashish/urlshortner/blob/master/TechnicalDesign.png?raw=true)
+
 ## API Contract
 There is only one supported endpoint -
 
