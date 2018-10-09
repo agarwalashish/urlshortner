@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using AspNetCoreRateLimit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Versioning;
@@ -27,7 +28,11 @@ namespace Phish.Hosting.URLShortner
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddOptions();
+            services.AddMemoryCache();
+
+            services.Configure<IpRateLimitPolicies>(Configuration.GetSection("IpRateLimiting"));
+            services.Configure<IpRateLimitPolicies>(Configuration.GetSection("IpRateLimitPolicies"));
 
             // Add versionings
             services.AddApiVersioning(o =>
@@ -51,6 +56,11 @@ namespace Phish.Hosting.URLShortner
 
             services.AddSingleton(phishRepository);
             services.AddSingleton(urlRepository);
+
+            services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
